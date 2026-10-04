@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --color-paper: #f4efe6;
+  --color-paper-deep: #e6dece;
+  --color-surface: #fffdf8;
+  --color-ink: #1a1814;
+  --color-muted: #6f675e;
+  --color-line: #ddd4c6;
+  --color-pine: #1b6b56;
+  --color-pine-deep: #134e3f;
+  --color-pine-soft: #e4f2ec;
+  --color-copper: #d06a2b;
+  --color-copper-soft: #f8ecdf;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-pine) 28%, white);
+  }
+}
+
+.surface-card {
+  background: var(--color-surface);
+  box-shadow:
+    0 0 0 1px rgb(26 24 20 / 0.06),
+    0 1px 2px rgb(26 24 20 / 0.05);
+}
+
+.press {
+  transition: scale 150ms ease-out;
+  touch-action: manipulation;
+}
+
+.press:active:not(:disabled) {
+  scale: 0.96;
+}
+
+.pad-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(-3px);
+  }
+  70% {
+    transform: translateX(3px);
+  }
+}
+
+.nudge {
+  animation: nudge 280ms ease-out;
+}
+
+@keyframes ring-pulse {
+  50% {
+    box-shadow: 0 0 0 8px rgb(208 106 43 / 0);
+  }
+}
+
+.ring-pulse {
+  box-shadow: 0 0 0 0 rgb(208 106 43 / 0.4);
+  animation: ring-pulse 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nudge,
+  .ring-pulse,
+  .bob,
+  .wiggle,
+  .path-draw,
+  .node-pop {
+    animation: none;
+  }
+  .path-draw {
+    stroke-dashoffset: 0;
+  }
+  .node-pop {
+    opacity: 1;
+  }
+  .ring-pulse {
+    box-shadow: 0 0 0 3px rgb(208 106 43 / 0.45);
+  }
+  .press {
+    transition: none;
+  }
+}
+
+.map-ground {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-pine) 16%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+}
+
+.path-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-path 900ms ease-out forwards;
+}
+
+.node-pop {
+  animation: node-pop 420ms ease-out both;
+}
+
+.bob {
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+.wiggle {
+  animation: wiggle 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes draw-path {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes node-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-8deg);
+  }
+  70% {
+    transform: rotate(8deg);
+  }
+}
