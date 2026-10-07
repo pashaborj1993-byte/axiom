@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { craftMore } from "./ladder";
 
 export const craft: Unit = {
   id: "craft",
@@ -195,6 +196,7 @@ export const craft: Unit = {
         },
       ],
     },
+    ...craftMore,
     {
       id: "craft-agents",
       title: "Tools and agents",

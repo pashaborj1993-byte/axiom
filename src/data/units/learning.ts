@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { learningMore } from "./ladder";
 
 export const learning: Unit = {
   id: "learning",
@@ -191,6 +192,7 @@ export const learning: Unit = {
         },
       ],
     },
+    ...learningMore,
     {
       id: "learning-generalize",
       title: "Generalize, don’t memorize",

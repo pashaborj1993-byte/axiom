@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { languageMore } from "./ladder";
 
 export const language: Unit = {
   id: "language",
@@ -196,6 +197,7 @@ export const language: Unit = {
         },
       ],
     },
+    ...languageMore,
     {
       id: "language-limits",
       title: "What it doesn’t do alone",

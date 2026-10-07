@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { networksMore } from "./ladder";
 
 export const networks: Unit = {
   id: "networks",
@@ -196,6 +197,7 @@ export const networks: Unit = {
         },
       ],
     },
+    ...networksMore,
     {
       id: "networks-attention",
       title: "Attention, briefly",

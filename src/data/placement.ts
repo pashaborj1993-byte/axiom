@@ -88,6 +88,50 @@ export const placementQuestions: PlacementQuestion[] = [
     answer: "It can take actions, not only write text",
     explain: "The danger is side effects. A wrong sentence is cheap. A wrong action can be expensive.",
   },
+  {
+    id: "place-holdout",
+    prompt: "A holdout (test) set is for…",
+    options: [
+      "A final grade on examples the model did not train on",
+      "The examples the model learns from",
+      "Choosing the logo",
+    ],
+    answer: "A final grade on examples the model did not train on",
+    explain: "If you train on the test, you are grading a memory, not a skill.",
+  },
+  {
+    id: "place-embed",
+    prompt: "An embedding is closest to…",
+    options: [
+      "A list of numbers that stands in for a word or image",
+      "A printed citation",
+      "A longer chat history stored forever",
+    ],
+    answer: "A list of numbers that stands in for a word or image",
+    explain: "Similar things land near each other. Near is the model’s geometry, not a dictionary.",
+  },
+  {
+    id: "place-rail",
+    prompt: "A guardrail in a product is…",
+    options: [
+      "A check around the model that limits what it can do",
+      "Proof the model has become careful",
+      "A higher temperature",
+    ],
+    answer: "A check around the model that limits what it can do",
+    explain: "Rails contain damage. They do not make the model wise.",
+  },
+  {
+    id: "place-adapt",
+    prompt: "A prompt and a fine-tune differ because…",
+    options: [
+      "A prompt changes one call. A fine-tune changes the model with extra examples",
+      "They are two names for temperature",
+      "A fine-tune is just a longer system note",
+    ],
+    answer: "A prompt changes one call. A fine-tune changes the model with extra examples",
+    explain: "Use a prompt when you can show the material each time. Train when the behavior has to stick, and you can test it.",
+  },
 ];
 
 export function gradePlacement(answers: { id: string; choice: string }[]) {
@@ -102,8 +146,8 @@ export function gradePlacement(answers: { id: string; choice: string }[]) {
 }
 
 export function trackFor(score: number): Track {
-  if (score >= 7) return "advanced";
-  if (score >= 4) return "intermediate";
+  if (score >= 10) return "advanced";
+  if (score >= 6) return "intermediate";
   return "beginner";
 }
 
@@ -116,17 +160,17 @@ export function trackCopy(track: Track) {
   if (track === "beginner") {
     return {
       title: "Beginner path",
-      lede: "You start at the first lesson. Words are explained as you go, your first misses are free passes, and a shield protects one missed day.",
+      lede: "You start at the first lesson. Quill explains the words, your first misses are free, and the path runs from “what is a model” through how to ship one.",
     };
   }
   if (track === "intermediate") {
     return {
       title: "Intermediate path",
-      lede: "You placed out of Foundations. Those lessons stay on the map, marked placed, and your next open node is Learning.",
+      lede: "You placed out of Foundations. The map opens at Learning: piles of examples, scores, and how a model leans.",
     };
   }
   return {
     title: "Advanced path",
-    lede: "You placed out of Foundations and Learning. The map opens at Networks. Replay anything you want a real crown on.",
+    lede: "You placed out of Foundations and Learning. The map opens at Networks and keeps going through Workshop and Frontier. Replay anything you want a real crown on.",
   };
 }

@@ -1,12 +1,23 @@
 import type { Exercise, Lesson, Unit } from "./types";
 import { craft } from "./units/craft";
 import { foundations } from "./units/foundations";
+import { frontier } from "./units/frontier";
 import { judgment } from "./units/judgment";
 import { language } from "./units/language";
 import { learning } from "./units/learning";
 import { networks } from "./units/networks";
+import { workshop } from "./units/workshop";
 
-export const units: Unit[] = [foundations, learning, networks, language, craft, judgment];
+export const units: Unit[] = [
+  foundations,
+  learning,
+  networks,
+  language,
+  craft,
+  judgment,
+  workshop,
+  frontier,
+];
 
 export const lessons: Lesson[] = units.flatMap((unit) => unit.lessons);
 

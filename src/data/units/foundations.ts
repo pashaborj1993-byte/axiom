@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { foundationsMore } from "./ladder";
 
 export const foundations: Unit = {
   id: "foundations",
@@ -199,6 +200,7 @@ export const foundations: Unit = {
         },
       ],
     },
+    ...foundationsMore,
     {
       id: "foundations-wave",
       title: "Why this wave",

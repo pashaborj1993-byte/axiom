@@ -51,6 +51,8 @@ export type Lesson = {
   id: string;
   title: string;
   idea: string;
+  /** A short aside from Quill, shown before the questions. */
+  spark?: string;
   checkpoint?: boolean;
   exercises: Exercise[];
 };

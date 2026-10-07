@@ -28,30 +28,43 @@ import { MAX_HEARTS, msUntilHeart, outOfLives, useProgress } from "@/lib/progres
 const WORDS: Record<string, { term: string; plain: string }[]> = {
   foundations: [
     { term: "Model", plain: "A program that learned patterns from examples." },
-    { term: "Training", plain: "The phase where those patterns get adjusted." },
-    { term: "Inference", plain: "Using the finished model on something new." },
+    { term: "Narrow", plain: "Built for one family of jobs, not every job." },
+    { term: "Dataset", plain: "The pile of examples. Holes in the pile become holes in the skill." },
   ],
   learning: [
     { term: "Label", plain: "The answer attached to an example, like spam or not." },
-    { term: "Reward", plain: "A score the system tries to increase." },
-    { term: "Generalize", plain: "Work on new cases, not only ones it memorized." },
+    { term: "Test set", plain: "A sealed pile. The honest grade uses cases the model did not train on." },
+    { term: "Loss", plain: "The number training tries to push down. Not the same as a happy user." },
   ],
   networks: [
     { term: "Weight", plain: "A number inside the model that training changes." },
-    { term: "Representation", plain: "An internal pattern the model uses as a stand-in for the input." },
-    { term: "Attention", plain: "A way to weigh which earlier pieces matter right now." },
+    { term: "Embedding", plain: "A list of numbers standing in for a word or a picture." },
+    { term: "Transformer", plain: "The structure most chat models use. Not a claim of understanding." },
   ],
   language: [
     { term: "Token", plain: "A chunk of text the model actually reads, not always a whole word." },
-    { term: "Temperature", plain: "How random the next-chunk choice is. Not extra knowledge." },
+    { term: "Window", plain: "How much text fits in one call. Outside it, this call cannot see." },
+    { term: "System prompt", plain: "The product’s instructions. Still just text, not a law." },
   ],
   craft: [
-    { term: "Prompt", plain: "The instructions and material you hand the model." },
-    { term: "Source", plain: "A document you can check. The model’s prose is not one." },
+    { term: "Spec", plain: "A prompt you can grade: the job, the material, the shape, the empty case." },
+    { term: "Latency", plain: "How long someone waits. A late right answer can still fail." },
+    { term: "Tool", plain: "Something the model can do in the world, beyond writing a reply." },
   ],
   judgment: [
     { term: "Evaluation", plain: "A set of checks you trust, not a single impressive demo." },
-    { term: "Tool", plain: "Something the model can do in the world, beyond writing a reply." },
+    { term: "Log", plain: "A copy of what you pasted. The chat screen is not the only one." },
+    { term: "License", plain: "Whether you are allowed to use the work. Fluency is not one." },
+  ],
+  workshop: [
+    { term: "Eval", plain: "The same cases, scored the same way, every time you change something." },
+    { term: "Guardrail", plain: "A check around the model. It limits damage. It does not add wisdom." },
+    { term: "Drift", plain: "The world moved after you measured. Yesterday’s score expired." },
+  ],
+  frontier: [
+    { term: "Scaling", plain: "More data and more compute. A spend, not a personality." },
+    { term: "Adapter", plain: "A small set of extra weights for a narrower job." },
+    { term: "Open weights", plain: "You can download the model. The license is a separate question." },
   ],
 };
 

@@ -1,19 +1,45 @@
 # Axiom
 
-Daily practice for how AI works. A path of short lessons, a placement quiz that picks your starting point, bonus campaigns, and an account that keeps your streak.
+Daily practice for how AI works. Short lessons sit on a winding path, a placement quiz picks where you start, and an account keeps the streak.
 
 Quill, a pine bird in a paper cap, walks the path with you.
 
-## What you practice
+## What you do
 
-Six units: Foundations, Learning, Networks, Language, Craft, and Judgment. Eight placement questions choose a beginner, intermediate, or advanced start. Hearts, XP, gems, crowns, and streak shields keep the habit.
+1. Create an account with email and password.
+2. Answer twelve placement questions. The score chooses a beginner, intermediate, or advanced start and places you past the lessons you already know.
+3. Walk the path. Each node is a short lesson. Bonus nodes are campaigns.
+4. Practice mistakes again, or open your profile for the streak, hearts, and settings.
+
+Hearts limit careless answers. Beginners get a few free misses before hearts start. XP, gems, crowns, and streak shields are the rest of the loop. Progress is saved on the signed-in account.
+
+## Curriculum
+
+Eight units, from the first definition to the decision not to ship:
+
+| Unit | What it covers |
+| --- | --- |
+| Foundations | What AI is, narrow tools, datasets, and products you already use |
+| Learning | Supervision, rewards, train and test, loss, and bias in the pile |
+| Networks | Weights, layers, embeddings, transformers, and attention |
+| Language | Tokens, sampling, context windows, and who is speaking in a prompt |
+| Craft | Specs, checking drafts, cost, retrieval, and tools |
+| Judgment | Evals, privacy, credit, safety, and when to refuse |
+| Workshop | Guardrails, human review, drift, and a shipping list |
+| Frontier | Scale, adapters, multimodal models, longer thinking, and open weights |
+
+Lessons use five exercise types: multiple choice, true or false, fill-in, matching, and ordering. Every answer has a short explanation. New lessons open with a note from Quill. A run of right answers shows up as a streak inside the round.
+
+Twelve placement questions choose a beginner, intermediate, or advanced start. Campaigns sit off the path: word camp, spot-the-model, a holdout dare, the weekend lab, chests, a streak shield, bench day, and a legendary last call. They pay gems and XP. Some grant a streak shield.
 
 ## Stack
 
-- React 19, TanStack Start, and Tailwind CSS 4
-- Zustand for the learning loop
-- Better Auth for email and password (Google and X sign-in when those providers are configured)
-- Postgres in production, PGLite when no database URL is set
+- React 19, TanStack Start, Tailwind CSS 4
+- Zustand for the learning loop, then a debounced save to the server
+- Better Auth for email and password
+- Postgres when `DATABASE_URL` is set, otherwise [PGLite](https://pglite.dev) in the app process
+
+Google and X sign-in appear only when the auth broker for this deployment is configured. Locally, email and password is the path that works out of the box.
 
 ## Run it
 
@@ -22,16 +48,51 @@ npm install
 npm run dev
 ```
 
-The dev server listens on port 8080. Create an account, take the placement quiz, and start the next lesson on the path.
+The dev server listens on port 8080. Open it, create an account, and take the placement quiz.
 
-Set `DATABASE_URL` when you want a real Postgres database. Auth provider secrets stay in the environment, not in this repo.
+To use a real database:
+
+```bash
+DATABASE_URL=postgres://user:password@localhost:5432/axiom npm run dev
+```
+
+Migrations run as part of `npm run build`, or on their own with `npm run db:migrate`.
+
+## Layout
+
+```
+src/routes/          sign-in, home, lesson, auth API
+src/components/      path, placement, lesson player, profile, Quill
+src/data/            units, placement questions, campaigns
+src/lib/progress.ts  hearts, streak, XP, and the sync to the server
+src/lib/auth/        sessions and the sign-in gate
+migrations/          account tables and learner_profiles
+public/quill/        Quill's poses
+```
+
+`learner_profiles` is one row per user. Crowns, mistakes, placed-out lessons, and campaign progress are stored as JSON text.
+
+## Pipeline
+
+Every push to `main`, and every pull request, runs typecheck, tests, and a production build. A green build is what ships.
+
+Production deploy from GitHub runs after that, on `main` only, when these repository secrets exist:
+
+| Secret | Where it comes from |
+| --- | --- |
+| `VERCEL_TOKEN` | A Vercel token with deploy access |
+| `VERCEL_ORG_ID` | The team or user id from the project settings |
+| `VERCEL_PROJECT_ID` | The project id |
+
+Without those secrets the checks still run, and the deploy step waits. Migrations apply during the build only when `DATABASE_URL` is set.
 
 ## Scripts
 
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Start the app |
+| `npm run db:migrate` | Apply SQL migrations |
 | `npm run typecheck` | Typecheck |
-| `npm run build` | Production build and migrations |
+| `npm run build` | Production build, then migrations |
 | `npm test` | Unit tests |
 | `npm run lint` | Lint |

@@ -97,12 +97,14 @@ export function Placement({
             <Quill mood="greet" className="h-32 shrink-0" label="Quill" />
             <div className="min-w-0 pb-1">
               <p className="text-xs font-semibold tracking-widest text-pine uppercase">Quill · Placement</p>
-              <h1 className="mt-2 font-serif text-3xl leading-tight">Eight questions. No failing score.</h1>
+              <h1 className="mt-2 font-serif text-3xl leading-tight">
+                {placementQuestions.length} questions. No failing score.
+              </h1>
             </div>
           </div>
           <p className="mt-3 text-pretty text-muted">
-            This only chooses where your path starts. Guessing is fine. Beginners get plain-language notes,
-            free passes on early misses, and a streak shield.
+            This only chooses where your path starts, from first words to the decision not to ship. Guessing is fine.
+            Beginners get plain-language notes, free passes on early misses, and a streak shield.
           </p>
           <label className="mt-8 block">
             <span className="text-sm font-semibold">What should we call you?</span>

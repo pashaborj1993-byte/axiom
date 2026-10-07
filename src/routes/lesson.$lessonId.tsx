@@ -64,6 +64,7 @@ function LessonBody() {
       title={lesson.title}
       kicker={lesson.checkpoint ? `Checkpoint · ${unit?.title ?? "Axiom"}` : (unit?.title ?? "Lesson")}
       idea={lesson.idea}
+      spark={lesson.spark}
       exercises={lesson.exercises}
       stakeHearts
       onExit={() => void navigate({ to: "/", search: { tab: "path", focus: lesson.id } })}

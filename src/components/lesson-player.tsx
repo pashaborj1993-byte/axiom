@@ -41,6 +41,7 @@ export function LessonPlayer({
   title,
   kicker,
   idea,
+  spark,
   exercises,
   stakeHearts,
   onExit,
@@ -51,6 +52,7 @@ export function LessonPlayer({
   title: string;
   kicker: string;
   idea?: string;
+  spark?: string;
   exercises: Exercise[];
   stakeHearts: boolean;
   onExit: () => void;
@@ -71,10 +73,20 @@ export function LessonPlayer({
   const [index, setIndex] = useState(0);
   const [graded, setGraded] = useState<Graded[]>([]);
   const [summary, setSummary] = useState<RoundSummary | null>(null);
+  const [combo, setCombo] = useState(0);
+  const [bestCombo, setBestCombo] = useState(0);
   const locked = useRef(false);
   const exercise = exercises[index];
   const doneCount = screen === "done" || screen === "hearts" ? exercises.length : index;
   const pct = exercises.length === 0 ? 0 : (doneCount / exercises.length) * 100;
+
+  function noteAnswer(correct: boolean) {
+    setCombo((value) => {
+      const next = correct ? value + 1 : 0;
+      setBestCombo((best) => Math.max(best, next));
+      return next;
+    });
+  }
 
   function miss() {
     if (!stakeHearts) return useProgress.getState().hearts;
@@ -156,6 +168,9 @@ export function LessonPlayer({
           />
           <span className="sr-only">Hearts</span>
           {hearts}
+          {combo >= 2 ? (
+            <span className="ml-1 text-xs font-semibold text-pine tabular-nums">{combo} straight</span>
+          ) : null}
           {level === "beginner" && grace > 0 ? (
             <span className="ml-1 text-xs font-semibold text-pine">{grace} free</span>
           ) : null}
@@ -173,6 +188,12 @@ export function LessonPlayer({
               </div>
             </div>
             <p className="mt-4 text-lg text-pretty">{idea}</p>
+            {spark ? (
+              <p className="mt-4 rounded-2xl bg-pine-soft px-4 py-3 text-sm text-pretty">
+                <span className="font-semibold text-pine">Quill’s note. </span>
+                {spark}
+              </p>
+            ) : null}
             {level === "beginner" && stakeHearts ? (
               <p className="mt-4 text-sm text-pretty text-muted">
                 Beginner path: free passes are spent before hearts. You have {grace} left.
@@ -196,7 +217,9 @@ export function LessonPlayer({
         <Question
           key={exercise.id}
           exercise={exercise}
+          combo={combo}
           onMiss={miss}
+          onAnswer={noteAnswer}
           onDone={handleDone}
           onGiveUp={giveUp}
         />
@@ -220,6 +243,9 @@ export function LessonPlayer({
               <p className="mt-1 text-sm font-semibold text-copper tabular-nums">+{summary.gems} gems</p>
             ) : null}
             {summary.foot ? <p className="mt-2 text-sm">{summary.foot}</p> : null}
+            {bestCombo >= 3 ? (
+              <p className="mt-3 text-sm font-semibold text-pine">{bestCombo} in a row</p>
+            ) : null}
           </div>
           <div className="pad-safe shrink-0 px-5 pt-3">
             <button
@@ -298,12 +324,16 @@ export function LessonPlayer({
 
 function Question({
   exercise,
+  combo,
   onMiss,
+  onAnswer,
   onDone,
   onGiveUp,
 }: {
   exercise: Exercise;
+  combo: number;
   onMiss: () => number;
+  onAnswer: (correct: boolean) => void;
   onDone: (correct: boolean) => void;
   onGiveUp: () => void;
 }) {
@@ -371,6 +401,7 @@ function Question({
     const ok = grade();
     setCorrect(ok);
     setPhase("feedback");
+    onAnswer(ok);
     if (ok) playCorrect();
     else {
       playWrong();
@@ -389,6 +420,7 @@ function Question({
         const ok = slips === 0;
         setCorrect(ok);
         setPhase("feedback");
+        onAnswer(ok);
         if (ok) playCorrect();
         else playWrong();
       }
@@ -604,7 +636,9 @@ function Question({
               <Quill mood={correct ? "cheer" : "oops"} className="h-12" />
             </span>
             <div className="max-h-36 min-w-0 overflow-y-auto">
-              <p className="font-semibold">{correct ? "That’s right" : "Not quite"}</p>
+              <p className="font-semibold">
+                {correct ? (combo >= 3 ? `${combo} in a row` : "That’s right") : "Not quite"}
+              </p>
               {!correct ? <p className="mt-1 text-sm">{answerLine(exercise)}</p> : null}
               <p className="mt-1 text-sm text-pretty">{exercise.explain}</p>
             </div>

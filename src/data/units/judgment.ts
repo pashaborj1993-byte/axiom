@@ -1,4 +1,5 @@
 import type { Unit } from "../types";
+import { judgmentMore } from "./ladder";
 
 export const judgment: Unit = {
   id: "judgment",
@@ -198,6 +199,7 @@ export const judgment: Unit = {
         },
       ],
     },
+    ...judgmentMore,
     {
       id: "judgment-choose",
       title: "Choosing a system",

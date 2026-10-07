@@ -6,9 +6,9 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
   appNameFromHost,
-  createHeadInjector,
+  createHeadInjector as createHeadInjectorRaw,
   grokXCreatorHeadTags,
-  injectGrokPwaHead,
+  injectGrokPwaHead as injectGrokPwaHeadRaw,
   isDocumentPath,
   isInstallQuery,
   publicAppHost,
@@ -20,6 +20,19 @@ import {
 import { renderInstallPage } from "./grok-pwa-plugin.mjs";
 
 const TEMPLATE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+// These checks describe the injector, not this app's card. A blank root keeps
+// public/og.jpg and src/lib/og/site.json from leaking into them. A caller that
+// passes its own cwd still wins.
+const BLANK_CWD = mkdtempSync(join(tmpdir(), "grok-pwa-blank-"));
+
+function injectGrokPwaHead(html, ctx = {}) {
+  return injectGrokPwaHeadRaw(html, { cwd: BLANK_CWD, ...ctx });
+}
+
+function createHeadInjector(ctx = {}) {
+  return createHeadInjectorRaw({ cwd: BLANK_CWD, ...ctx });
+}
 
 test("injects before </head>", () => {
   const out = injectGrokPwaHead("<html><head><title>x</title></head><body></body></html>");
