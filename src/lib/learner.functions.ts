@@ -296,5 +296,11 @@ export const completePlacement = createServerFn({ method: "POST" })
     `;
     const saved = await readProfile(context.userId);
     if (!saved) throw new Error("Could not save placement");
+    try {
+      const { recordPlacement } = await import("@/lib/org-store.server");
+      await recordPlacement(context.userId, `Placement ${graded.score}/${graded.total}, ${level}`);
+    } catch {
+      // The track is already saved. The desk can miss one line rather than fail the quiz.
+    }
     return saved;
   });

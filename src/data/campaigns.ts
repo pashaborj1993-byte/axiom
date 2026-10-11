@@ -1,7 +1,7 @@
 import { getUnitOf, lessons, units } from "./curriculum";
 import type { Exercise } from "./types";
-import { isoWeekKey, isWeekend } from "@/lib/format";
-import { pickN } from "@/lib/seed";
+import { isoWeekKey, isWeekend } from "../lib/format";
+import { pickN } from "../lib/seed";
 import type { Track } from "./placement";
 
 export type CampaignKind = "chest" | "sprint" | "legendary";

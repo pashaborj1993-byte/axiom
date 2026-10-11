@@ -1,4 +1,5 @@
 import { tally } from "@/data/curriculum";
+import { WorkspaceCard } from "@/components/workspace-card";
 import { trackCopy, type Track } from "@/data/placement";
 import { Quill } from "@/components/quill";
 import { UserButton } from "@/lib/auth/gates";
@@ -58,6 +59,8 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
           </span>
         </p>
       ) : null}
+
+      <WorkspaceCard />
 
       <dl className="mt-6 grid grid-cols-2 gap-3">
         <Stat label="Total XP" value={String(xp)} />

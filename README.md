@@ -13,6 +13,8 @@ Quill, a pine bird in a paper cap, walks the path with you.
 
 Hearts limit careless answers. Beginners get a few free misses before hearts start. XP, gems, crowns, and streak shields are the rest of the loop. Progress is saved on the signed-in account.
 
+A company can open a workspace from the You tab. The owner shares an invite code. Admins open the desk to see who has practiced, which track they are on, and a record of joins, role changes, and placements. Learners only see the workspace name.
+
 ## Curriculum
 
 Eight units, from the first definition to the decision not to ship:
