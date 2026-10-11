@@ -58,7 +58,7 @@ export function Placement({
   if (step === "result" && level) {
     const copy = trackCopy(level as Track);
     return (
-      <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
+      <main className="phone-screen mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
         <div className="my-auto">
           <div className="flex items-end gap-3">
             <Quill
@@ -91,7 +91,7 @@ export function Placement({
 
   if (step === "intro") {
     return (
-      <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
+      <main className="phone-screen mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
         <div className="my-auto">
           <div className="flex items-end gap-4">
             <Quill mood="greet" className="h-32 shrink-0" label="Quill" />
@@ -163,7 +163,7 @@ export function Placement({
   const pct = (index / placementQuestions.length) * 100;
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col">
+    <main className="phone-screen mx-auto flex min-h-dvh w-full max-w-md flex-col">
       <header className="flex items-center gap-3 px-4 pt-4">
         <div
           className="h-2 flex-1 overflow-hidden rounded-full bg-paper-deep"

@@ -17,7 +17,19 @@ A company can open a workspace from the You tab. The owner shares an invite code
 
 Field notes are dated claims with an https source. The lessons teach mechanisms that stay true when a product name changes. When a fact about a model, a price, or a law changes, publish a note and retire the old one. The app does not invent a news ticker.
 
-The same site installs on a phone. On iPhone, use Safari’s Share menu and Add to Home Screen. On Android, Chrome can install it. It stays online either way: progress, ads, and notes come from the account.
+The same site installs on a phone home screen and opens full screen. On iPhone or iPad, use Safari: Share, then Add to Home Screen. On Android, use Chrome: menu, then Install app. That does not require an Apple or Google developer account. A listing in the App Store is a separate step (Apple Developer Program, 99 USD a year). Google Play is a one-time 25 USD fee. Neither store is required for the home-screen app.
+
+## Where the data lives
+
+While you are trying it here, accounts sit in an in-memory Postgres (PGLite) inside the server process. It is not a file on disk. Restarting the server wipes it.
+
+When the app is published, `deploy.database` is on, so the host sets `DATABASE_URL` and the same tables move to hosted Postgres (Neon). Questions, field notes, ads, and learner rows are in that database. The desk is how you edit them. You only need a connection string if you want a SQL client; the app does not ship a separate admin console for raw tables.
+
+To point a copy at your own Postgres:
+
+```bash
+DATABASE_URL=postgres://user:password@localhost:5432/axiom npm run dev
+```
 
 Quill, Pip, Lumen, or Dot can walk the path. A daily bonus and a sponsor card, both editable, sit on top of the lessons.
 
@@ -58,13 +70,25 @@ npm run dev
 
 The dev server listens on port 8080. Open it, create an account, and take the placement quiz.
 
-To use a real database:
-
-```bash
-DATABASE_URL=postgres://user:password@localhost:5432/axiom npm run dev
-```
-
 Migrations run as part of `npm run build`, or on their own with `npm run db:migrate`.
+
+## What you pay for
+
+You do not need a paid service to practice in the preview. That database resets.
+
+To keep real accounts online:
+
+| Service | Why | Required? |
+|---|---|---|
+| This app's publish host, with the database flag already on | Serves the site and attaches Postgres | Yes, for a lasting deployment |
+| Neon, or any Postgres, if you host it yourself | The `DATABASE_URL` the app already uses | Only if you are not using the included database |
+| A domain name | A stable address for the home-screen icon | Optional |
+| Apple Developer Program, 99 USD a year | App Store listing | No. Home Screen install does not need it |
+| Google Play Console, 25 USD once | Play Store listing | No. Chrome install does not need it |
+| An ad network such as AdSense or AdMob | Real paid ads from other companies | No. The sponsor cards in the desk are yours to write |
+| An email sender such as Resend | Password-reset mail | Not yet. Sign-in is email and password stored in the database |
+
+Google and X sign-in appear only when the auth broker for this deployment is configured. Locally, email and password is the path that works.
 
 ## Layout
 

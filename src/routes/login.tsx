@@ -68,7 +68,7 @@ function Login() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
+    <main className="phone-screen mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
       <div className="my-auto">
         <div className="flex items-end gap-4">
           <Quill mood="greet" className="h-28 shrink-0" label="Quill" />

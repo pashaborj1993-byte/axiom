@@ -143,7 +143,7 @@ export function LessonPlayer({
   }
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-lg flex-col bg-paper">
+    <div className="phone-screen mx-auto flex h-dvh w-full max-w-lg flex-col bg-paper">
       <header className="flex shrink-0 items-center gap-3 px-4 py-3">
         <button
           type="button"

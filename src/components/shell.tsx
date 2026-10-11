@@ -51,7 +51,7 @@ export function Shell({
 
   return (
     <div className="mx-auto flex h-dvh w-full max-w-5xl justify-center lg:gap-8 lg:px-6">
-      <div className="flex h-dvh w-full max-w-lg min-w-0 flex-col">
+      <div className="phone-screen flex h-dvh w-full max-w-lg min-w-0 flex-col">
         <header className="shrink-0 px-4 pt-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">

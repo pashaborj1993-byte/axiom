@@ -26,6 +26,13 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     line-height: 1.5;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
   h1,
   h2,
@@ -64,6 +71,12 @@
 
 .pad-safe {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.phone-screen {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 @keyframes nudge {

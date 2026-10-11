@@ -2,10 +2,21 @@ import { useEffect, useState } from "react";
 
 type PromptEvent = Event & { prompt: () => Promise<void> };
 
+function installedAlready() {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    ("standalone" in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
+  );
+}
+
 export function InstallCard() {
   const [prompt, setPrompt] = useState<PromptEvent | null>(null);
-  const [installed, setInstalled] = useState(false);
-  const ios = typeof navigator !== "undefined" && /iphone|ipad/i.test(navigator.userAgent);
+  const [installed, setInstalled] = useState(installedAlready);
+  const ios =
+    typeof navigator !== "undefined" &&
+    (/iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
 
   useEffect(() => {
     const onPrompt = (event: Event) => {
@@ -27,7 +38,7 @@ export function InstallCard() {
     <section className="surface-card mt-6 rounded-2xl px-4 py-4">
       <h2 className="font-serif text-xl">On your phone</h2>
       <p className="mt-1 text-sm text-pretty text-muted">
-        The same app runs in the browser and as a home-screen app on iPhone and Android. It stays online, so the path and the field notes come from your account.
+        Install Axiom on the home screen. It opens full screen, like an app, and stays signed in to the same account.
       </p>
       {prompt ? (
         <button
@@ -40,8 +51,8 @@ export function InstallCard() {
       ) : (
         <p className="mt-3 text-sm text-pretty">
           {ios
-            ? "In Safari, tap Share, then Add to Home Screen."
-            : "In Chrome on Android, open the browser menu and choose Install app."}
+            ? "On iPhone or iPad, open this site in Safari. Tap Share, then Add to Home Screen."
+            : "On Android, open this site in Chrome. Tap the menu, then Install app or Add to Home screen."}
         </p>
       )}
     </section>
