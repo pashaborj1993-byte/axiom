@@ -4,6 +4,7 @@ import { Mark } from "@/components/mark";
 import { Companion } from "@/components/companion";
 import { dayOfYear, displayName, formatClock } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useT } from "@/i18n/use-t";
 import { effectiveStreak, msUntilHeart, useProgress } from "@/lib/progress";
 
 const TIPS = [
@@ -17,10 +18,10 @@ const TIPS = [
 
 export type TabId = "path" | "practice" | "you";
 
-const TABS: { id: TabId; label: string; icon: typeof Route }[] = [
-  { id: "path", label: "Learn", icon: Route },
-  { id: "practice", label: "Drill", icon: Dumbbell },
-  { id: "you", label: "You", icon: UserRound },
+const TABS: { id: TabId; label: "learn" | "drill" | "you"; icon: typeof Route }[] = [
+  { id: "path", label: "learn", icon: Route },
+  { id: "practice", label: "drill", icon: Dumbbell },
+  { id: "you", label: "you", icon: UserRound },
 ];
 
 export function Shell({
@@ -48,6 +49,7 @@ export function Shell({
   const ratio = Math.max(0, Math.min(1, todayXp / goal));
   const tip = TIPS[dayOfYear() % TIPS.length] ?? TIPS[0];
   const nextHeart = msUntilHeart(hearts, heartUpdatedAt);
+  const t = useT();
 
   return (
     <div className="mx-auto flex h-dvh w-full max-w-5xl justify-center lg:gap-8 lg:px-6">
@@ -92,7 +94,7 @@ export function Shell({
           </div>
           <div className="mt-3">
             <div className="flex items-baseline justify-between text-xs text-muted">
-              <span>{ratio >= 1 ? "Daily goal met" : "Today"}</span>
+              <span>{ratio >= 1 ? t("goalMet") : t("today")}</span>
               <span className="tabular-nums">
                 {todayXp}/{goal} XP
               </span>
@@ -127,7 +129,7 @@ export function Shell({
                   )}
                 >
                   <Icon className="size-5" aria-hidden />
-                  {item.label}
+                  {t(item.label)}
                   {item.id === "practice" && mistakes > 0 ? (
                     <span className="absolute top-2 right-7 size-2 rounded-full bg-copper" />
                   ) : null}

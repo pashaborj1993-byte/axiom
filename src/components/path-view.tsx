@@ -21,6 +21,8 @@ import {
 import type { Lesson } from "@/data/types";
 import { trackCopy, type Track } from "@/data/placement";
 import { Companion } from "@/components/companion";
+import { unitCopy } from "@/i18n/plain";
+import { useLocale, useT } from "@/i18n/use-t";
 import { DailyBonus } from "@/components/daily-bonus";
 import { FieldNotes } from "@/components/field-notes";
 import { formatClock } from "@/lib/format";
@@ -108,6 +110,8 @@ export function PathView({
   const [pending, setPending] = useState<string | null>(null);
   const [picked, setPicked] = useState<CampaignDef | null>(null);
   const slice = { level, crowns, placed, campaigns: campaignsDone };
+  const t = useT();
+  const locale = useLocale();
 
   useEffect(() => {
     const id = focus || current;
@@ -130,8 +134,12 @@ export function PathView({
     <div className="px-4 pt-5 pb-8">
       {track ? (
         <section className="mb-5">
-          <p className="text-xs font-semibold tracking-widest text-pine uppercase">{track.title}</p>
-          <p className="mt-1 text-sm text-pretty text-muted">{track.lede}</p>
+          <p className="text-xs font-semibold tracking-widest text-pine uppercase">
+            {level === "beginner" ? t("beginnerTitle") : level === "intermediate" ? t("intermediateTitle") : t("advancedTitle")}
+          </p>
+          <p className="mt-1 text-sm text-pretty text-muted">
+            {level === "beginner" ? t("beginnerLede") : level === "intermediate" ? t("intermediateLede") : t("advancedLede")}
+          </p>
           <p className="mt-2 text-sm tabular-nums text-muted">
             {progress.cleared}/{progress.total} lessons
             {progress.placed > 0 ? ` · ${progress.placed} placed out` : ""}
@@ -143,10 +151,8 @@ export function PathView({
       {progress.cleared === progress.total ? (
         <section className="surface-card mb-6 rounded-2xl p-5">
           <p className="text-xs font-semibold tracking-widest text-pine uppercase">Path complete</p>
-          <h2 className="mt-1 font-serif text-2xl">You cleared every lesson.</h2>
-          <p className="mt-2 text-sm text-pretty text-muted">
-            Replay a node for a higher crown, or open a chest you have not cleared.
-          </p>
+          <h2 className="mt-1 font-serif text-2xl">{t("pathComplete")}</h2>
+          <p className="mt-2 text-sm text-pretty text-muted">{t("replay")}</p>
         </section>
       ) : null}
       {units.map((unit, unitIndex) => {
@@ -169,6 +175,7 @@ export function PathView({
         );
         const height = nodes.length * ROW + PAD + 36;
         const words = level === "beginner" ? WORDS[unit.id] : undefined;
+        const spoken = unitCopy(unit.id, locale);
         return (
           <section key={unit.id} className="mb-8">
             <div
@@ -183,10 +190,10 @@ export function PathView({
                   unitIndex % 2 === 0 ? "text-copper" : "text-paper/80",
                 )}
               >
-                Unit {unitIndex + 1}
+                {t("unit")} {unitIndex + 1}
               </p>
-              <h2 className="mt-1 font-serif text-3xl leading-tight">{unit.title}</h2>
-              <p className="mt-1 text-sm text-paper/80">{unit.blurb}</p>
+              <h2 className="mt-1 font-serif text-3xl leading-tight">{spoken?.title ?? unit.title}</h2>
+              <p className="mt-1 text-sm text-paper/80">{spoken?.blurb ?? unit.blurb}</p>
               <p className="mt-3 text-sm tabular-nums text-paper/70">
                 {done}/{unit.lessons.length} lessons
               </p>

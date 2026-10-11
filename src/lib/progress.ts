@@ -3,6 +3,10 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { CharacterId } from "@/data/characters";
 import { characterId } from "@/data/characters";
+import type { ThemeId } from "@/data/themes";
+import { themeId } from "@/data/themes";
+import type { Locale } from "@/i18n/messages";
+import { localeId } from "@/i18n/messages";
 import type { Track } from "@/data/placement";
 import { dayDiff, localDateKey, yesterdayKey } from "./format";
 import type { CampaignRecord, LearnerSnapshot } from "./learner-types";
@@ -45,6 +49,8 @@ type Data = {
   perfectLessons: number;
   character: CharacterId;
   bonusDate: string;
+  locale: Locale;
+  theme: ThemeId;
   cloudStatus: CloudStatus;
   cloudUserId: string;
   syncStatus: SyncStatus;
@@ -84,6 +90,8 @@ type Actions = {
   setGoal: (goal: Goal) => void;
   setSound: (sound: boolean) => void;
   setCharacter: (id: CharacterId) => void;
+  setLocale: (locale: Locale) => void;
+  setTheme: (theme: ThemeId) => void;
   claimBonus: () => { xp: number; gems: number; heart: boolean } | null;
   loseHeart: () => number;
   noteMistake: (id: string) => void;
@@ -134,6 +142,8 @@ const initial: Data = {
   perfectLessons: 0,
   character: "quill",
   bonusDate: "",
+  locale: "en",
+  theme: "lagoon",
   cloudStatus: "idle",
   cloudUserId: "",
   syncStatus: "idle",
@@ -221,6 +231,8 @@ function fromSnapshot(row: LearnerSnapshot): Partial<Data> {
     perfectLessons: row.perfectLessons,
     character: characterId(row.character),
     bonusDate: row.bonusDate,
+    locale: localeId(row.locale),
+    theme: themeId(row.theme),
   };
 }
 
@@ -248,6 +260,8 @@ export function toSnapshot(state: Data): LearnerSnapshot {
     perfectLessons: state.perfectLessons,
     character: state.character,
     bonusDate: state.bonusDate,
+    locale: state.locale,
+    theme: state.theme,
     crowns: state.crowns,
     mistakes: state.mistakes,
     placed: state.placed,
@@ -300,6 +314,8 @@ export const useProgress = create<Data & Actions>()(
       setGoal: (goal) => set({ dailyGoal: goal }),
       setSound: (sound) => set({ sound }),
       setCharacter: (id) => set({ character: characterId(id) }),
+      setLocale: (locale) => set({ locale: localeId(locale) }),
+      setTheme: (theme) => set({ theme: themeId(theme) }),
       claimBonus: () => {
         const data = get();
         const today = localDateKey();

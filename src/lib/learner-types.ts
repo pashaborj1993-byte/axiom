@@ -1,4 +1,6 @@
 import type { CharacterId } from "@/data/characters";
+import type { ThemeId } from "@/data/themes";
+import type { Locale } from "@/i18n/messages";
 import type { Track } from "@/data/placement";
 
 export type CampaignRecord = { accuracy: number; at: string };
@@ -30,6 +32,8 @@ export type LearnerSnapshot = {
   campaigns: Record<string, CampaignRecord>;
   character: CharacterId;
   bonusDate: string;
+  locale: Locale;
+  theme: ThemeId;
 };
 
 export type PlacementInput = {

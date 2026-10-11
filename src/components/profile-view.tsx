@@ -4,6 +4,8 @@ import { trackCopy, type Track } from "@/data/placement";
 import { Companion } from "@/components/companion";
 import { InstallCard } from "@/components/install-card";
 import { CHARACTERS, characterId } from "@/data/characters";
+import { LanguagePicker, ThemePicker } from "@/components/look-pickers";
+import { useT } from "@/i18n/use-t";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { displayName } from "@/lib/format";
@@ -38,6 +40,7 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
   const character = useProgress((state) => state.character);
   const setCharacter = useProgress((state) => state.setCharacter);
   const campaignCount = useProgress((state) => Object.keys(state.campaigns).length);
+  const t = useT();
   const stats = tally({ crowns, placed });
   const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
   const track = level ? trackCopy(level as Track) : null;
@@ -64,8 +67,11 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
         </p>
       ) : null}
 
+      <LanguagePicker />
+      <ThemePicker />
+
       <fieldset className="mt-6">
-        <legend className="text-sm font-semibold">Who walks with you</legend>
+        <legend className="text-sm font-semibold">{t("whoWalks")}</legend>
         <div className="mt-2 grid grid-cols-2 gap-2">
           {CHARACTERS.map((item) => {
             const selected = characterId(character) === item.id;

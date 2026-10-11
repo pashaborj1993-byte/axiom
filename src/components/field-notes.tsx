@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useT } from "@/i18n/use-t";
 import type { FieldNote } from "@/lib/bank-types";
 
 export function FieldNotes() {
+  const t = useT();
   const [notes, setNotes] = useState<FieldNote[] | null>(null);
 
   useEffect(() => {
@@ -24,10 +26,8 @@ export function FieldNotes() {
 
   return (
     <section className="rise mb-5">
-      <h2 className="font-serif text-xl">Field notes</h2>
-      <p className="mt-1 text-sm text-pretty text-muted">
-        Dated claims with a source. A product name goes stale. The source is the check.
-      </p>
+      <h2 className="font-serif text-xl">{t("fieldNotes")}</h2>
+      <p className="mt-1 text-sm text-pretty text-muted">{t("fieldNotesLede")}</p>
       <ul className="mt-3 space-y-3">
         {notes.map((note) => (
           <li key={note.id} className="surface-card rounded-2xl px-4 py-3">

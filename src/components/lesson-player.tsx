@@ -3,6 +3,8 @@ import { ChevronDown, ChevronUp, Heart, X } from "lucide-react";
 import { Companion } from "@/components/companion";
 import { SponsorCard } from "@/components/sponsor-card";
 import { characterName } from "@/data/characters";
+import { lessonPlain } from "@/i18n/plain";
+import { useLocale, useT } from "@/i18n/use-t";
 import type { Exercise } from "@/data/types";
 import { cn } from "@/lib/cn";
 import { formatClock } from "@/lib/format";
@@ -40,6 +42,7 @@ function useNow() {
 }
 
 export function LessonPlayer({
+  lessonId,
   title,
   kicker,
   idea,
@@ -51,6 +54,7 @@ export function LessonPlayer({
   onFinished,
   onComplete,
 }: {
+  lessonId?: string;
   title: string;
   kicker: string;
   idea?: string;
@@ -77,6 +81,10 @@ export function LessonPlayer({
   const [summary, setSummary] = useState<RoundSummary | null>(null);
   const [combo, setCombo] = useState(0);
   const [bestCombo, setBestCombo] = useState(0);
+  const t = useT();
+  const locale = useLocale();
+  const spoken = lessonId ? lessonPlain(lessonId, locale) : null;
+  const friendly = level === "beginner" && spoken;
   const locked = useRef(false);
   const exercise = exercises[index];
   const doneCount = screen === "done" || screen === "hearts" ? exercises.length : index;
@@ -186,21 +194,30 @@ export function LessonPlayer({
               <Companion mood="think" className="h-24 shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs font-semibold tracking-widest text-pine uppercase">{kicker}</p>
-                <h1 className="mt-2 font-serif text-3xl leading-tight">{title}</h1>
+                <h1 className="mt-2 font-serif text-3xl leading-tight">{friendly ? spoken.title : title}</h1>
               </div>
             </div>
-            <p className="mt-4 text-lg text-pretty">{idea}</p>
+            <p className="mt-4 text-lg text-pretty">{friendly ? spoken.plain : idea}</p>
+            {friendly ? (
+              <details className="mt-3">
+                <summary className="text-sm font-semibold text-pine">{t("moreDetail")}</summary>
+                <p className="mt-2 text-sm text-pretty text-muted">{idea}</p>
+              </details>
+            ) : null}
             {spark ? (
               <p className="mt-4 rounded-2xl bg-pine-soft px-4 py-3 text-sm text-pretty">
                 <span className="font-semibold text-pine">{characterName(useProgress.getState().character)}’s note. </span>
                 {spark}
               </p>
             ) : null}
-            {level === "beginner" && stakeHearts ? (
+            {level === "beginner" ? (
               <p className="mt-4 text-sm text-pretty text-muted">
-                Beginner path: free passes are spent before hearts. You have {grace} left.
-                Words for this unit live in the guidebook on the map.
+                {t("beginnerNote")}
+                {stakeHearts ? ` ${t("freePasses")}: ${grace}.` : ""}
               </p>
+            ) : null}
+            {locale !== "en" && !spoken ? (
+              <p className="mt-4 text-sm text-pretty text-muted">{t("questionsInEnglish")}</p>
             ) : null}
           </div>
           <div className="pad-safe shrink-0 px-5 pt-3">
@@ -209,7 +226,7 @@ export function LessonPlayer({
               onClick={() => setScreen("play")}
               className="press h-12 w-full rounded-xl bg-pine font-semibold text-paper"
             >
-              Start
+              {t("startLesson")}
             </button>
           </div>
         </section>
@@ -219,6 +236,7 @@ export function LessonPlayer({
         <Question
           key={exercise.id}
           exercise={exercise}
+          hint={friendly ? spoken.hint : undefined}
           combo={combo}
           onMiss={miss}
           onAnswer={noteAnswer}
@@ -327,6 +345,7 @@ export function LessonPlayer({
 
 function Question({
   exercise,
+  hint,
   combo,
   onMiss,
   onAnswer,
@@ -334,12 +353,15 @@ function Question({
   onGiveUp,
 }: {
   exercise: Exercise;
+  hint?: string;
   combo: number;
   onMiss: () => number;
   onAnswer: (correct: boolean) => void;
   onDone: (correct: boolean) => void;
   onGiveUp: () => void;
 }) {
+  const t = useT();
+  const locale = useLocale();
   const options = useMemo(
     () => (exercise.type === "choice" ? seededShuffle(exercise.options, exercise.id) : []),
     [exercise],
@@ -463,6 +485,13 @@ function Question({
                 : "Choose"}
         </p>
         <h1 className="mt-2 font-serif text-3xl leading-tight">{exercise.prompt}</h1>
+        {hint ? (
+          <details className="mt-3">
+            <summary className="text-sm font-semibold text-pine">{t("hint")}</summary>
+            <p className="mt-2 text-sm text-pretty text-muted">{hint}</p>
+          </details>
+        ) : null}
+        {locale !== "en" ? <p className="mt-3 text-sm text-muted">{t("questionsInEnglish")}</p> : null}
         {exercise.type === "match" ? (
           <p className="mt-2 text-sm text-muted">Tap a term, then its match.</p>
         ) : null}
@@ -640,7 +669,7 @@ function Question({
             </span>
             <div className="max-h-36 min-w-0 overflow-y-auto">
               <p className="font-semibold">
-                {correct ? (combo >= 3 ? `${combo} in a row` : "That’s right") : "Not quite"}
+                {correct ? (combo >= 3 ? `${combo} in a row` : t("correct")) : t("notQuite")}
               </p>
               {!correct ? <p className="mt-1 text-sm">{answerLine(exercise)}</p> : null}
               <p className="mt-1 text-sm text-pretty">{exercise.explain}</p>
@@ -657,7 +686,7 @@ function Question({
             phase === "ask" && !spent && "bg-pine text-paper",
           )}
         >
-          {spent ? "End round" : phase === "feedback" ? "Continue" : "Check"}
+          {spent ? "End round" : phase === "feedback" ? t("continue") : t("check")}
         </button>
       </div>
     </form>

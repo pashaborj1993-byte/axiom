@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Quill } from "@/components/quill";
-import { placementQuestions, trackCopy } from "@/data/placement";
+import { placementView } from "@/i18n/placement-copy";
+import { useLocale, useT } from "@/i18n/use-t";
+import { placementQuestions } from "@/data/placement";
 import { GOALS, type Goal, useProgress } from "@/lib/progress";
 import { submitPlacement } from "@/lib/learner-client";
 import { cn } from "@/lib/cn";
-import type { Track } from "@/data/placement";
 
-const GOAL_COPY: Record<Goal, { title: string; detail: string }> = {
-  50: { title: "Steady", detail: "50 XP · about one lesson" },
-  100: { title: "Sharp", detail: "100 XP · about two lessons" },
-  150: { title: "Deep", detail: "150 XP · a long sitting" },
+const GOAL_KEYS: Record<Goal, { title: "steady" | "sharp" | "deep"; detail: "steadyHint" | "sharpHint" | "deepHint" }> = {
+  50: { title: "steady", detail: "steadyHint" },
+  100: { title: "sharp", detail: "sharpHint" },
+  150: { title: "deep", detail: "deepHint" },
 };
 
 export function Placement({
@@ -36,6 +37,8 @@ export function Placement({
   const level = useProgress((state) => state.level);
   const score = useProgress((state) => state.placementScore);
   const total = useProgress((state) => state.placementTotal);
+  const t = useT();
+  const locale = useLocale();
 
   async function finish(next: { id: string; choice: string }[]) {
     setPending(true);
@@ -49,14 +52,19 @@ export function Placement({
       });
       setStep("result");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save the quiz.");
+      setError(err instanceof Error ? err.message : t("couldNotSave"));
     } finally {
       setPending(false);
     }
   }
 
   if (step === "result" && level) {
-    const copy = trackCopy(level as Track);
+    const copy =
+      level === "beginner"
+        ? { title: t("beginnerTitle"), lede: t("beginnerLede") }
+        : level === "intermediate"
+          ? { title: t("intermediateTitle"), lede: t("intermediateLede") }
+          : { title: t("advancedTitle"), lede: t("advancedLede") };
     return (
       <main className="phone-screen mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
         <div className="my-auto">
@@ -67,7 +75,7 @@ export function Placement({
               label="Quill"
             />
             <div className="min-w-0 pb-2">
-              <p className="text-xs font-semibold tracking-widest text-pine uppercase">Placement</p>
+              <p className="text-xs font-semibold tracking-widest text-pine uppercase">{t("placement")}</p>
               <h1 className="mt-2 font-serif text-3xl leading-tight">{copy.title}</h1>
             </div>
           </div>
@@ -76,13 +84,13 @@ export function Placement({
             {score}
             <span className="text-xl text-muted">/{total || placementQuestions.length}</span>
           </p>
-          <p className="text-sm text-muted">Saved to your account. You can retake this later from You.</p>
+          <p className="text-sm text-muted">{t("savedAccount")}</p>
           <button
             type="button"
             onClick={onFinished}
             className="press mt-8 h-12 w-full rounded-xl bg-pine font-semibold text-paper"
           >
-            Enter the path
+            {t("enterPath")}
           </button>
         </div>
       </main>
@@ -98,16 +106,15 @@ export function Placement({
             <div className="min-w-0 pb-1">
               <p className="text-xs font-semibold tracking-widest text-pine uppercase">Quill · Placement</p>
               <h1 className="mt-2 font-serif text-3xl leading-tight">
-                {placementQuestions.length} questions. No failing score.
+                {t("questionsNoFail")}
               </h1>
             </div>
           </div>
           <p className="mt-3 text-pretty text-muted">
-            This only chooses where your path starts, from first words to the decision not to ship. Guessing is fine.
-            Beginners get plain-language notes, free passes on early misses, and a streak shield.
+            {t("placementLede")}
           </p>
           <label className="mt-8 block">
-            <span className="text-sm font-semibold">What should we call you?</span>
+            <span className="text-sm font-semibold">{t("callYou")}</span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -117,7 +124,7 @@ export function Placement({
             />
           </label>
           <fieldset className="mt-6">
-            <legend className="text-sm font-semibold">Daily goal</legend>
+            <legend className="text-sm font-semibold">{t("dailyGoal")}</legend>
             <div className="mt-2 grid gap-2">
               {GOALS.map((value) => {
                 const selected = goal === value;
@@ -132,9 +139,9 @@ export function Placement({
                       selected ? "bg-pine text-paper" : "surface-card",
                     )}
                   >
-                    <span className="font-semibold">{GOAL_COPY[value].title}</span>
+                    <span className="font-semibold">{t(GOAL_KEYS[value].title)}</span>
                     <span className={cn("text-sm", selected ? "text-paper/80" : "text-muted")}>
-                      {GOAL_COPY[value].detail}
+                      {t(GOAL_KEYS[value].detail)}
                     </span>
                   </button>
                 );
@@ -146,7 +153,7 @@ export function Placement({
             onClick={() => setStep("quiz")}
             className="press mt-8 h-12 w-full rounded-xl bg-pine font-semibold text-paper"
           >
-            Start the quiz
+            {t("startQuiz")}
           </button>
           {onCancel ? (
             <button type="button" onClick={onCancel} className="press mt-2 h-12 w-full rounded-xl font-semibold">
@@ -159,6 +166,7 @@ export function Placement({
   }
 
   if (!question) return null;
+  const view = placementView(question, locale);
   const correct = choice === question.answer;
   const pct = (index / placementQuestions.length) * 100;
 
@@ -180,34 +188,34 @@ export function Placement({
         </span>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
-        <p className="text-xs font-semibold tracking-widest text-pine uppercase">Placement</p>
-        <h1 className="mt-2 font-serif text-3xl leading-tight">{question.prompt}</h1>
+        <p className="text-xs font-semibold tracking-widest text-pine uppercase">{t("placement")}</p>
+        <h1 className="mt-2 font-serif text-3xl leading-tight">{view.prompt}</h1>
         <div className="mt-6 grid gap-2" role="radiogroup" aria-label="Answer">
-          {question.options.map((option) => {
-            const selected = choice === option;
-            const show = checked && (selected || option === question.answer);
+          {view.options.map((option) => {
+            const selected = choice === option.value;
+            const show = checked && (selected || option.value === question.answer);
             return (
               <button
-                key={option}
+                key={option.value}
                 type="button"
                 role="radio"
                 aria-checked={selected}
                 disabled={checked || pending}
-                onClick={() => setChoice(option)}
+                onClick={() => setChoice(option.value)}
                 className={cn(
                   "press min-h-14 rounded-xl px-4 text-left font-medium",
                   !show && selected && "bg-pine text-paper",
                   !show && !selected && "surface-card",
-                  show && option === question.answer && "bg-pine text-paper",
-                  show && selected && option !== question.answer && "bg-copper-soft",
+                  show && option.value === question.answer && "bg-pine text-paper",
+                  show && selected && option.value !== question.answer && "bg-copper-soft",
                 )}
               >
-                {option}
+                {option.label}
               </button>
             );
           })}
         </div>
-        {checked ? <p className="mt-4 text-sm text-pretty text-muted">{question.explain}</p> : null}
+        {checked ? <p className="mt-4 text-sm text-pretty text-muted">{view.explain}</p> : null}
         {error ? <p className="mt-4 text-sm text-copper">{error}</p> : null}
       </div>
       <div className="pad-safe px-5 pt-3">
@@ -218,7 +226,7 @@ export function Placement({
             onClick={() => setChecked(true)}
             className="press h-12 w-full rounded-xl bg-pine font-semibold text-paper disabled:opacity-40"
           >
-            Check
+            {t("check")}
           </button>
         ) : (
           <button
@@ -238,7 +246,7 @@ export function Placement({
             }}
             className="press h-12 w-full rounded-xl bg-pine font-semibold text-paper disabled:opacity-40"
           >
-            {pending ? "Saving…" : index + 1 >= placementQuestions.length ? "See your path" : "Continue"}
+            {pending ? "…" : index + 1 >= placementQuestions.length ? t("seePath") : t("continue")}
           </button>
         )}
       </div>

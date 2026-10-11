@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { characterId } from "@/data/characters";
+import { themeId } from "@/data/themes";
+import { localeId } from "@/i18n/messages";
 import { campaignAllowed } from "@/data/campaigns";
 import { getExercise, lessons } from "@/data/curriculum";
 import {
@@ -137,6 +139,8 @@ function toSnapshot(row: Raw): LearnerSnapshot {
     campaigns: campaignsFrom(row.campaigns),
     character: characterId(row.character),
     bonusDate: dateOrEmpty(row.bonus_date),
+    locale: localeId(row.locale),
+    theme: themeId(row.theme),
   };
 }
 
@@ -171,6 +175,8 @@ function parseProgress(input: unknown): LearnerSnapshot {
     campaigns: campaignsFrom(raw.campaigns),
     character: characterId(raw.character),
     bonusDate: dateOrEmpty(raw.bonusDate),
+    locale: localeId(raw.locale),
+    theme: themeId(raw.theme),
   };
 }
 
@@ -242,6 +248,8 @@ export const saveLearner = createServerFn({ method: "POST" })
         campaigns = ${JSON.stringify(data.campaigns)},
         character = ${data.character},
         bonus_date = ${data.bonusDate},
+        locale = ${data.locale},
+        theme = ${data.theme},
         updated_at = now()
       where user_id = ${context.userId}
     `;

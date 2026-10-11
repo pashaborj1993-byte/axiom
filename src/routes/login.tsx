@@ -3,6 +3,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Mark } from "@/components/mark";
 import { Quill } from "@/components/quill";
 import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
+import { LanguagePicker } from "@/components/look-pickers";
+import { useT } from "@/i18n/use-t";
 import { cn } from "@/lib/cn";
 
 export const Route = createFileRoute("/login")({
@@ -19,6 +21,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const t = useT();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,19 +81,20 @@ function Login() {
               <p className="text-xs font-semibold tracking-widest text-pine uppercase">Axiom</p>
             </div>
             <h1 className="mt-2 font-serif text-3xl leading-tight">
-              {mode === "create" ? "Create your account" : "Welcome back"}
+              {mode === "create" ? t("createAccount") : t("welcomeBack")}
             </h1>
           </div>
         </div>
-        <p className="mt-3 text-pretty text-muted">
-          Your placement, streak, and path are saved to this account, so they follow you to another device.
-        </p>
+        <p className="mt-3 text-pretty text-muted">{t("accountLede")}</p>
+        <div className="mt-6">
+          <LanguagePicker />
+        </div>
         {authEnabled ? (
           <>
             <form onSubmit={onSubmit} className="mt-8 grid gap-3">
               {mode === "create" ? (
                 <label className="block">
-                  <span className="text-sm font-semibold">Name</span>
+                  <span className="text-sm font-semibold">{t("name")}</span>
                   <input
                     value={name}
                     onChange={(event) => setName(event.target.value)}
@@ -102,7 +106,7 @@ function Login() {
                 </label>
               ) : null}
               <label className="block">
-                <span className="text-sm font-semibold">Email</span>
+                <span className="text-sm font-semibold">{t("email")}</span>
                 <input
                   type="email"
                   value={email}
@@ -114,7 +118,7 @@ function Login() {
                 />
               </label>
               <label className="block">
-                <span className="text-sm font-semibold">Password</span>
+                <span className="text-sm font-semibold">{t("password")}</span>
                 <input
                   type="password"
                   value={password}
@@ -132,7 +136,7 @@ function Login() {
                 disabled={pending}
                 className="press mt-2 h-12 rounded-xl bg-pine font-semibold text-paper disabled:opacity-50"
               >
-                {pending ? "Please wait…" : mode === "create" ? "Create account" : "Sign in"}
+                {pending ? "…" : mode === "create" ? t("create") : t("signIn")}
               </button>
             </form>
             <button
@@ -143,7 +147,7 @@ function Login() {
                 setError("");
               }}
             >
-              {mode === "create" ? "Already registered? Sign in" : "New here? Create an account"}
+              {mode === "create" ? t("already") : t("newHere")}
             </button>
             <div className="mt-8 grid gap-2">
               {GROK_PROVIDERS.map((provider) => (

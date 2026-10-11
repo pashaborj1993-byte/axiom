@@ -90,6 +90,7 @@ function LessonBody() {
 
   return (
     <LessonPlayer
+      lessonId={lesson.id}
       title={lesson.title}
       kicker={lesson.checkpoint ? `Checkpoint · ${unit?.title ?? "Axiom"}` : (unit?.title ?? "Lesson")}
       idea={lesson.idea}
