@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { ChevronDown, ChevronUp, Heart, X } from "lucide-react";
-import { Quill } from "@/components/quill";
+import { Companion } from "@/components/companion";
+import { SponsorCard } from "@/components/sponsor-card";
+import { characterName } from "@/data/characters";
 import type { Exercise } from "@/data/types";
 import { cn } from "@/lib/cn";
 import { formatClock } from "@/lib/format";
@@ -181,7 +183,7 @@ export function LessonPlayer({
         <section className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
             <div className="flex items-start gap-4">
-              <Quill mood="think" className="h-24 shrink-0" label="Quill" />
+              <Companion mood="think" className="h-24 shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs font-semibold tracking-widest text-pine uppercase">{kicker}</p>
                 <h1 className="mt-2 font-serif text-3xl leading-tight">{title}</h1>
@@ -190,7 +192,7 @@ export function LessonPlayer({
             <p className="mt-4 text-lg text-pretty">{idea}</p>
             {spark ? (
               <p className="mt-4 rounded-2xl bg-pine-soft px-4 py-3 text-sm text-pretty">
-                <span className="font-semibold text-pine">Quill’s note. </span>
+                <span className="font-semibold text-pine">{characterName(useProgress.getState().character)}’s note. </span>
                 {spark}
               </p>
             ) : null}
@@ -228,10 +230,9 @@ export function LessonPlayer({
       {screen === "done" && summary ? (
         <section className="flex min-h-0 flex-1 flex-col">
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center">
-            <Quill
+            <Companion
               mood={summary.accuracy >= 60 ? "cheer" : "oops"}
               className="h-36"
-              label="Quill"
             />
             <p className="mt-2 text-xs font-semibold tracking-widest text-muted uppercase">
               {summary.accuracy}% accuracy
@@ -246,6 +247,7 @@ export function LessonPlayer({
             {bestCombo >= 3 ? (
               <p className="mt-3 text-sm font-semibold text-pine">{bestCombo} in a row</p>
             ) : null}
+            <SponsorCard placement="lesson_end" />
           </div>
           <div className="pad-safe shrink-0 px-5 pt-3">
             <button
@@ -262,7 +264,7 @@ export function LessonPlayer({
       {screen === "hearts" ? (
         <section className="flex min-h-0 flex-1 flex-col">
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center">
-            <Quill mood="wilt" className="h-36" label="Quill" />
+            <Companion mood="wilt" className="h-36" />
             <h1 className="mt-4 font-serif text-4xl">Out of hearts</h1>
             <p className="mt-3 max-w-sm text-pretty text-muted">
               This round stops here. One heart returns every 20 minutes, or a drill can earn one
@@ -273,6 +275,7 @@ export function LessonPlayer({
                 ? "A heart just came back."
                 : `Next heart in ${formatClock(msUntilHeart(hearts, heartUpdatedAt, now))}`}
             </p>
+            <SponsorCard placement="hearts" />
           </div>
           <div className="pad-safe grid shrink-0 gap-2 px-5 pt-3">
             {onDrill ? (
@@ -295,7 +298,7 @@ export function LessonPlayer({
         <div className="fixed inset-0 z-40 flex items-end justify-center bg-ink/40 px-4 pb-4" role="dialog" aria-modal="true" aria-labelledby="leave-title">
           <div className="surface-card w-full max-w-lg rounded-2xl p-5">
             <div className="flex items-center gap-3">
-              <Quill mood="oops" className="h-16 shrink-0" />
+              <Companion mood="oops" className="h-16 shrink-0" />
               <h2 id="leave-title" className="font-serif text-2xl">
                 Leave this round?
               </h2>
@@ -633,7 +636,7 @@ function Question({
         {phase === "feedback" ? (
           <div className="mb-3 flex items-start gap-3">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-paper">
-              <Quill mood={correct ? "cheer" : "oops"} className="h-12" />
+              <Companion mood={correct ? "cheer" : "oops"} className="h-12" />
             </span>
             <div className="max-h-36 min-w-0 overflow-y-auto">
               <p className="font-semibold">

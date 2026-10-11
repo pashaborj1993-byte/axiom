@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Dumbbell, Flame, Gem, Heart, Route, UserRound, Zap } from "lucide-react";
 import { Mark } from "@/components/mark";
-import { Quill } from "@/components/quill";
+import { Companion } from "@/components/companion";
 import { dayOfYear, displayName, formatClock } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { effectiveStreak, msUntilHeart, useProgress } from "@/lib/progress";
@@ -140,7 +140,7 @@ export function Shell({
       <aside className="hidden h-dvh w-72 shrink-0 overflow-y-auto py-8 lg:block">
         <div className="surface-card rounded-2xl p-5">
           <div className="flex items-end gap-3">
-            <Quill mood={streak > 0 ? "cheer" : "idle"} className="h-20 shrink-0" />
+            <Companion mood={streak > 0 ? "cheer" : "idle"} className="h-20 shrink-0" />
             <p className="pb-1 text-xs font-semibold tracking-widest text-muted uppercase">
               {level ? `${level} · ${name}` : name}
             </p>

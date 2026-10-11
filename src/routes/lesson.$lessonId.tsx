@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { LearnerGate } from "@/components/learner-gate";
 import { LessonPlayer } from "@/components/lesson-player";
 import { getLesson, getUnitOf, isUnlocked, nextAfter } from "@/data/curriculum";
+import type { Exercise } from "@/data/types";
 import { useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/lesson/$lessonId")({
@@ -24,6 +26,25 @@ function LessonBody() {
   const navigate = useNavigate();
   const lesson = getLesson(lessonId);
   const credit = { crowns, placed };
+  const [exercises, setExercises] = useState<Exercise[] | null>(null);
+
+  useEffect(() => {
+    if (!lesson) return;
+    let cancel = false;
+    setExercises(null);
+    void (async () => {
+      try {
+        const { loadLessonBank } = await import("@/lib/bank.functions");
+        const rows = await loadLessonBank({ data: lesson.id });
+        if (!cancel) setExercises(rows.length > 0 ? rows : lesson.exercises);
+      } catch {
+        if (!cancel) setExercises(lesson.exercises);
+      }
+    })();
+    return () => {
+      cancel = true;
+    };
+  }, [lesson]);
 
   if (!onboarded) return <Navigate to="/" search={{ tab: "path" }} />;
   if (!lesson) {
@@ -56,6 +77,14 @@ function LessonBody() {
     );
   }
 
+  if (!exercises) {
+    return (
+      <main className="mx-auto flex min-h-dvh w-full max-w-md items-center justify-center px-6">
+        <p className="text-sm text-muted">Opening the lesson…</p>
+      </main>
+    );
+  }
+
   const unit = getUnitOf(lesson.id);
   const focus = nextAfter(lesson.id) ?? lesson.id;
 
@@ -65,7 +94,7 @@ function LessonBody() {
       kicker={lesson.checkpoint ? `Checkpoint · ${unit?.title ?? "Axiom"}` : (unit?.title ?? "Lesson")}
       idea={lesson.idea}
       spark={lesson.spark}
-      exercises={lesson.exercises}
+      exercises={exercises}
       stakeHearts
       onExit={() => void navigate({ to: "/", search: { tab: "path", focus: lesson.id } })}
       onFinished={() => void navigate({ to: "/", search: { tab: "path", focus } })}

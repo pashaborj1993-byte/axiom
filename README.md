@@ -13,7 +13,13 @@ Quill, a pine bird in a paper cap, walks the path with you.
 
 Hearts limit careless answers. Beginners get a few free misses before hearts start. XP, gems, crowns, and streak shields are the rest of the loop. Progress is saved on the signed-in account.
 
-A company can open a workspace from the You tab. The owner shares an invite code. Admins open the desk to see who has practiced, which track they are on, and a record of joins, role changes, and placements. Learners only see the workspace name.
+A company can open a workspace from the You tab. The owner shares an invite code. Admins open the desk to see who has signed up, which track they are on, and a record of joins, role changes, and placements. The same desk edits the SQL bank: lesson questions, sponsor cards, and field notes.
+
+Field notes are dated claims with an https source. The lessons teach mechanisms that stay true when a product name changes. When a fact about a model, a price, or a law changes, publish a note and retire the old one. The app does not invent a news ticker.
+
+The same site installs on a phone. On iPhone, use Safari’s Share menu and Add to Home Screen. On Android, Chrome can install it. It stays online either way: progress, ads, and notes come from the account.
+
+Quill, Pip, Lumen, or Dot can walk the path. A daily bonus and a sponsor card, both editable, sit on top of the lessons.
 
 ## Curriculum
 

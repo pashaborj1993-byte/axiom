@@ -1,3 +1,4 @@
+import type { CharacterId } from "@/data/characters";
 import type { Track } from "@/data/placement";
 
 export type CampaignRecord = { accuracy: number; at: string };
@@ -27,6 +28,8 @@ export type LearnerSnapshot = {
   mistakes: string[];
   placed: Record<string, boolean>;
   campaigns: Record<string, CampaignRecord>;
+  character: CharacterId;
+  bonusDate: string;
 };
 
 export type PlacementInput = {

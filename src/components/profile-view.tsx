@@ -1,7 +1,9 @@
 import { tally } from "@/data/curriculum";
 import { WorkspaceCard } from "@/components/workspace-card";
 import { trackCopy, type Track } from "@/data/placement";
-import { Quill } from "@/components/quill";
+import { Companion } from "@/components/companion";
+import { InstallCard } from "@/components/install-card";
+import { CHARACTERS, characterId } from "@/data/characters";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { displayName } from "@/lib/format";
@@ -33,6 +35,8 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
   const correct = useProgress((state) => state.correctCount);
   const attempts = useProgress((state) => state.attemptCount);
   const perfect = useProgress((state) => state.perfectLessons);
+  const character = useProgress((state) => state.character);
+  const setCharacter = useProgress((state) => state.setCharacter);
   const campaignCount = useProgress((state) => Object.keys(state.campaigns).length);
   const stats = tally({ crowns, placed });
   const accuracy = attempts === 0 ? 0 : Math.round((correct / attempts) * 100);
@@ -41,7 +45,7 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
   return (
     <div className="px-4 pt-6 pb-10">
       <div className="flex items-end gap-3">
-        <Quill mood={streak > 0 ? "cheer" : "idle"} className="h-24 shrink-0" label="Quill" />
+        <Companion mood={streak > 0 ? "cheer" : "idle"} className="h-24 shrink-0" />
         <div className="min-w-0 pb-1">
           <h1 className="font-serif text-3xl">{displayName(name)}</h1>
           <p className="mt-1 text-sm text-pretty text-muted">{quillNote(streak, stats.cleared, stats.total)}</p>
@@ -60,6 +64,32 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
         </p>
       ) : null}
 
+      <fieldset className="mt-6">
+        <legend className="text-sm font-semibold">Who walks with you</legend>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          {CHARACTERS.map((item) => {
+            const selected = characterId(character) === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setCharacter(item.id)}
+                className={cn(
+                  "press rounded-2xl px-3 py-3 text-left",
+                  selected ? "bg-pine text-paper" : "surface-card",
+                )}
+              >
+                <span className="block font-semibold">{item.name}</span>
+                <span className={cn("mt-1 block text-xs text-pretty", selected ? "text-paper/80" : "text-muted")}>
+                  {item.blurb}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
       <WorkspaceCard />
 
       <dl className="mt-6 grid grid-cols-2 gap-3">
@@ -76,6 +106,8 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
         <Stat label="Perfect runs" value={String(perfect)} />
         <Stat label="Answered" value={String(attempts)} />
       </dl>
+
+      <InstallCard />
 
       <div className="mt-8">
         <UserButton />

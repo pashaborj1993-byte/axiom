@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { CharacterId } from "@/data/characters";
+import { characterId } from "@/data/characters";
 import type { Track } from "@/data/placement";
 import { dayDiff, localDateKey, yesterdayKey } from "./format";
 import type { CampaignRecord, LearnerSnapshot } from "./learner-types";
@@ -41,6 +43,8 @@ type Data = {
   correctCount: number;
   attemptCount: number;
   perfectLessons: number;
+  character: CharacterId;
+  bonusDate: string;
   cloudStatus: CloudStatus;
   cloudUserId: string;
   syncStatus: SyncStatus;
@@ -79,6 +83,8 @@ type Actions = {
   setName: (name: string) => void;
   setGoal: (goal: Goal) => void;
   setSound: (sound: boolean) => void;
+  setCharacter: (id: CharacterId) => void;
+  claimBonus: () => { xp: number; gems: number; heart: boolean } | null;
   loseHeart: () => number;
   noteMistake: (id: string) => void;
   completeLesson: (input: { lessonId: string; graded: Graded[] }) => LessonOutcome;
@@ -126,6 +132,8 @@ const initial: Data = {
   correctCount: 0,
   attemptCount: 0,
   perfectLessons: 0,
+  character: "quill",
+  bonusDate: "",
   cloudStatus: "idle",
   cloudUserId: "",
   syncStatus: "idle",
@@ -211,6 +219,8 @@ function fromSnapshot(row: LearnerSnapshot): Partial<Data> {
     correctCount: row.correctCount,
     attemptCount: row.attemptCount,
     perfectLessons: row.perfectLessons,
+    character: characterId(row.character),
+    bonusDate: row.bonusDate,
   };
 }
 
@@ -236,6 +246,8 @@ export function toSnapshot(state: Data): LearnerSnapshot {
     correctCount: state.correctCount,
     attemptCount: state.attemptCount,
     perfectLessons: state.perfectLessons,
+    character: state.character,
+    bonusDate: state.bonusDate,
     crowns: state.crowns,
     mistakes: state.mistakes,
     placed: state.placed,
@@ -287,6 +299,22 @@ export const useProgress = create<Data & Actions>()(
       setName: (name) => set({ name: name.trim().slice(0, 24) }),
       setGoal: (goal) => set({ dailyGoal: goal }),
       setSound: (sound) => set({ sound }),
+      setCharacter: (id) => set({ character: characterId(id) }),
+      claimBonus: () => {
+        const data = get();
+        const today = localDateKey();
+        if (data.bonusDate === today) return null;
+        const heart = data.hearts < MAX_HEARTS;
+        set({
+          bonusDate: today,
+          gems: data.gems + 15,
+          xp: data.xp + 20,
+          todayXp: data.todayDate === today ? data.todayXp + 20 : 20,
+          todayDate: today,
+          hearts: heart ? data.hearts + 1 : data.hearts,
+        });
+        return { xp: 20, gems: 15, heart };
+      },
       loseHeart: () => {
         const data = get();
         if (data.level === "beginner" && data.grace > 0) {

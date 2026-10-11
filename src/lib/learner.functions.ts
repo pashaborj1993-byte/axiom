@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { characterId } from "@/data/characters";
 import { campaignAllowed } from "@/data/campaigns";
 import { getExercise, lessons } from "@/data/curriculum";
 import {
@@ -134,6 +135,8 @@ function toSnapshot(row: Raw): LearnerSnapshot {
     mistakes: mistakesFrom(row.mistakes),
     placed: placedFrom(row.placed),
     campaigns: campaignsFrom(row.campaigns),
+    character: characterId(row.character),
+    bonusDate: dateOrEmpty(row.bonus_date),
   };
 }
 
@@ -166,6 +169,8 @@ function parseProgress(input: unknown): LearnerSnapshot {
     mistakes: mistakesFrom(raw.mistakes),
     placed: {},
     campaigns: campaignsFrom(raw.campaigns),
+    character: characterId(raw.character),
+    bonusDate: dateOrEmpty(raw.bonusDate),
   };
 }
 
@@ -235,6 +240,8 @@ export const saveLearner = createServerFn({ method: "POST" })
         crowns = ${JSON.stringify(data.crowns)},
         mistakes = ${JSON.stringify(data.mistakes)},
         campaigns = ${JSON.stringify(data.campaigns)},
+        character = ${data.character},
+        bonus_date = ${data.bonusDate},
         updated_at = now()
       where user_id = ${context.userId}
     `;

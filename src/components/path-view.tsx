@@ -20,7 +20,9 @@ import {
 } from "@/data/curriculum";
 import type { Lesson } from "@/data/types";
 import { trackCopy, type Track } from "@/data/placement";
-import { Quill } from "@/components/quill";
+import { Companion } from "@/components/companion";
+import { DailyBonus } from "@/components/daily-bonus";
+import { FieldNotes } from "@/components/field-notes";
 import { formatClock } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { MAX_HEARTS, msUntilHeart, outOfLives, useProgress } from "@/lib/progress";
@@ -136,6 +138,8 @@ export function PathView({
           </p>
         </section>
       ) : null}
+      <DailyBonus />
+      <FieldNotes />
       {progress.cleared === progress.total ? (
         <section className="surface-card mb-6 rounded-2xl p-5">
           <p className="text-xs font-semibold tracking-widest text-pine uppercase">Path complete</p>
@@ -311,7 +315,7 @@ export function PathView({
                     {active ? (
                       <div className="absolute bottom-full left-0 mb-2 -translate-x-1/2">
                         <div className="bob flex flex-col items-center">
-                          <Quill mood="idle" className="h-14" />
+                          <Companion mood="idle" className="h-14" />
                           <span className="mt-1 rounded-full bg-ink px-2 py-0.5 text-xs font-semibold text-paper">
                             Start
                           </span>
@@ -384,7 +388,7 @@ export function PathView({
               open(current);
             }}
           >
-            <Quill mood="greet" className="h-12" />
+            <Companion mood="greet" className="h-12" />
             <span className="truncate">Start · {lessons.find((lesson) => lesson.id === current)?.title}</span>
           </button>
         </div>
@@ -398,7 +402,7 @@ export function PathView({
         >
           <div className="surface-card w-full max-w-lg rounded-2xl p-5">
             <div className="flex items-start gap-3">
-              <Quill
+              <Companion
                 mood={outOfLives({ hearts, level, grace }) ? "wilt" : "cheer"}
                 className="h-20 shrink-0"
               />
