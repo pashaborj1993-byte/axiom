@@ -104,6 +104,18 @@ public/quill/        Quill's poses
 
 `learner_profiles` is one row per user. Crowns, mistakes, placed-out lessons, and campaign progress are stored as JSON text.
 
+## Stores
+
+`android/` and `ios/` are the Capacitor projects for Google Play and the App Store. The bundle id is `app.axiom.learn`. They open the published website, because the account and the lessons live on the server.
+
+```bash
+CAPACITOR_SERVER_URL=https://your-published-site.example npm run mobile:sync
+```
+
+Then open `android/` in Android Studio or `ios/` on a Mac in Xcode. Play Console is a one-time 25 USD fee. The Apple Developer Program is 99 USD a year. A price is set in those consoles, not in this repo. Neither store can be submitted from this project alone: Android needs a signing key, iOS needs a Mac.
+
+`/privacy` is the policy both stores ask for. Signed-in people can delete an account from the You tab.
+
 ## Pipeline
 
 Every push to `main`, and every pull request, runs typecheck, tests, and a production build. A green build is what ships.
@@ -127,4 +139,5 @@ Without those secrets the checks still run, and the deploy step waits. Migration
 | `npm run typecheck` | Typecheck |
 | `npm run build` | Production build, then migrations |
 | `npm test` | Unit tests |
+| `npm run mobile:sync` | Copy the phone shell into the Android and iOS projects |
 | `npm run lint` | Lint |

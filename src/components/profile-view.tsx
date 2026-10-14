@@ -2,6 +2,7 @@ import { tally } from "@/data/curriculum";
 import { WorkspaceCard } from "@/components/workspace-card";
 import { trackCopy, type Track } from "@/data/placement";
 import { Companion } from "@/components/companion";
+import { DeleteAccount } from "@/components/delete-account";
 import { InstallCard } from "@/components/install-card";
 import { CHARACTERS, characterId } from "@/data/characters";
 import { LanguagePicker, ThemePicker } from "@/components/look-pickers";
@@ -118,6 +119,7 @@ export function ProfileView({ onRetake }: { onRetake: () => void }) {
       <div className="mt-8">
         <UserButton />
       </div>
+      <DeleteAccount />
 
       <label className="mt-8 block">
         <span className="text-sm font-semibold">Name on the path</span>

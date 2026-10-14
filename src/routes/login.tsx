@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Mark } from "@/components/mark";
 import { Quill } from "@/components/quill";
 import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
@@ -165,6 +165,11 @@ function Login() {
         ) : (
           <p className="mt-6 text-sm text-muted">Sign-in is disabled.</p>
         )}
+        <p className="mt-6 text-sm">
+          <Link to="/privacy" className="font-semibold text-pine">
+            Privacy
+          </Link>
+        </p>
       </div>
     </main>
   );

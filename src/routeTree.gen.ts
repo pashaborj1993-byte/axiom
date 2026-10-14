@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LessonLessonIdRouteImport } from './routes/lesson.$lessonId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -30,6 +31,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LessonLessonIdRoute = LessonLessonIdRouteImport.update({
   id: '/lesson/$lessonId',
   path: '/lesson/$lessonId',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -60,22 +68,32 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/login' | '/lesson/$lessonId' | '/api/auth/$'
+  fullPaths:
+    '/' | '/admin' | '/login' | '/privacy' | '/lesson/$lessonId' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/login' | '/lesson/$lessonId' | '/api/auth/$'
+  to:
+    '/' | '/admin' | '/login' | '/privacy' | '/lesson/$lessonId' | '/api/auth/$'
   id:
-    '__root__' | '/' | '/admin' | '/login' | '/lesson/$lessonId' | '/api/auth/$'
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/privacy'
+    | '/lesson/$lessonId'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -103,6 +121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lesson/$lessonId': {
       id: '/lesson/$lessonId'
       path: '/lesson/$lessonId'
@@ -124,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

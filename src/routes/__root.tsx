@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { Look } from "@/components/look";
+import { NativeBoot } from "@/components/native-boot";
 import { PwaRegister } from "@/components/pwa-register";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
@@ -46,6 +47,7 @@ export const Route = createRootRoute({
       <body className="bg-paper font-sans text-ink antialiased">
         <PreviewHostBridge />
         <Look />
+        <NativeBoot />
         <PwaRegister />
         <AuthProvider>
           <Outlet />

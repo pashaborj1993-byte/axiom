@@ -213,6 +213,19 @@ export const auth = betterAuth({
   // Local email/password — toggled only via `./email-password` (not a plugin).
   ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
 
+  user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user) => {
+        const { getSql } = await import("@/lib/db");
+        const sql = await getSql();
+        await sql`delete from ad_claims where user_id = ${user.id}`;
+        await sql`delete from org_members where user_id = ${user.id}`;
+        await sql`delete from learner_profiles where user_id = ${user.id}`;
+      },
+    },
+  },
+
   // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
   // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a
   // `Domain=.grok.me` session cookie onto this app. `__Host-` requires Secure +

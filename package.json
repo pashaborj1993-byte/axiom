@@ -17,10 +17,17 @@
     "typecheck": "tsc --noEmit",
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts && node --import jiti/register --test src/lib/org-policy.test.ts src/data/curriculum.test.ts",
+    "mobile:sync": "cap sync",
+    "mobile:android": "cap open android",
+    "mobile:ios": "cap open ios",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@electric-sql/pglite": "^0.5.4",
     "@hookform/resolvers": "^5.7.0",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -79,6 +86,9 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
     "@eslint/js": "^9.20.0",
     "@types/node": "^22.16.5",
     "@types/pg": "^8.11.10",
