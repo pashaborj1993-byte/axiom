@@ -1,0 +1,23 @@
+name: Bug report
+description: A problem found in Axiom, including one copied from the desk
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Paste the report from the desk, or describe it.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      placeholder: /lesson/foundations-1
+  - type: textarea
+    id: expect
+    attributes:
+      label: What should have happened
+    validations:
+      required: true

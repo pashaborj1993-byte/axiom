@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BankDesk } from "@/components/bank-desk";
+import { BugInbox } from "@/components/bug-inbox";
 import { LearnerGate } from "@/components/learner-gate";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { formatInvite } from "@/lib/org-policy";
@@ -183,6 +184,7 @@ function Desk() {
               ))}
             </ol>
           </section>
+          {workspace.role === "owner" || workspace.role === "admin" ? <BugInbox /> : null}
           <BankDesk />
         </>
       ) : null}

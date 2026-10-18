@@ -104,17 +104,15 @@ public/quill/        Quill's poses
 
 `learner_profiles` is one row per user. Crowns, mistakes, placed-out lessons, and campaign progress are stored as JSON text.
 
-## Stores
+## How this runs
 
-`android/` and `ios/` are the Capacitor projects for Google Play and the App Store. The bundle id is `app.axiom.learn`. They open the published website, because the account and the lessons live on the server.
+The live site is [https://palm-brick-terra-lilac.grok.me](https://palm-brick-terra-lilac.grok.me). Accounts and lessons are stored in the Postgres database that comes with that site. You do not rent a separate server. A new migration in `migrations/` is applied the next time the site is published.
 
-```bash
-CAPACITOR_SERVER_URL=https://your-published-site.example npm run mobile:sync
-```
+The phone apps open that same address. The bundle id is `app.axiom.learn`.
 
-Then open `android/` in Android Studio or `ios/` on a Mac in Xcode. Play Console is a one-time 25 USD fee. The Apple Developer Program is 99 USD a year. A price is set in those consoles, not in this repo. Neither store can be submitted from this project alone: Android needs a signing key, iOS needs a Mac.
+Signed-in people report a problem from the You tab. An owner or admin reads it on `/admin`, under Problems. Fix it in this repository, push to `main`, and let the checks pass. Then publish again so the live site picks up the fix, and mark the report fixed.
 
-`/privacy` is the policy both stores ask for. Signed-in people can delete an account from the You tab.
+Play Console is a one-time 25 USD fee. Open `android/` in Android Studio, sign the bundle, and upload it. The Apple Developer Program is 99 USD a year, and the iOS build has to be made on a Mac from the `ios/` folder. Set the price in those consoles. `/privacy` and account deletion are already in the app.
 
 ## Pipeline
 
